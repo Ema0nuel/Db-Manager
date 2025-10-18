@@ -13,8 +13,8 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key"
+    "NEXT_PUBLIC_SUPABASE_URL": "https://gjrcyqvfveybuxjzenod.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqcmN5cXZmdmV5YnV4anplbm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDE2NTgsImV4cCI6MjA3NjA3NzY1OH0.lS8fpaqsOQDXAgOEs4mdd6gZpLcNjPt3lTNJ0Py8Aik",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqcmN5cXZmdmV5YnV4anplbm9kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDUwMTY1OCwiZXhwIjoyMDc2MDc3NjU4fQ.EvaAGWmtO-2-_xHaJoLIR-3u85ui9T9pRThyu9s1qJo"
   }
 }

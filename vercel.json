@@ -3,34 +3,17 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/static"
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
-    {
-      "src": "/api/ping",
-      "dest": "/api/ping.js"
-    },
-    {
-      "src": "^/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "^/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "^/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "^/.*",
-      "dest": "/index.html"
-    }
+    { "src": "/api/ping", "dest": "/api/ping.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "env": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://gjrcyqvfveybuxjzenod.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqcmN5cXZmdmV5YnV4anplbm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDE2NTgsImV4cCI6MjA3NjA3NzY1OH0.lS8fpaqsOQDXAgOEs4mdd6gZpLcNjPt3lTNJ0Py8Aik",
-    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqcmN5cXZmdmV5YnV4anplbm9kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDUwMTY1OCwiZXhwIjoyMDc2MDc3NjU4fQ.EvaAGWmtO-2-_xHaJoLIR-3u85ui9T9pRThyu9s1qJo"
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqcmN5cXZmdmV5YnV4anplbm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDE2NTgsImV4cCI6MjA3NjA3NzY1OH0.lS8fpaqsOQDXAgOEs4mdd6gZpLcNjPt3lTNJ0Py8Aik"
   }
 }

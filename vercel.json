@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    }
-  ],
   "builds": [
     {
-      "src": "/api/**/*.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     },
     {
@@ -18,12 +12,9 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
+    { "src": "^/api/(.*)$", "dest": "/api/$1.js" },
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": ".*", "dest": "/index.html" }
   ],
   "env": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://gjrcyqvfveybuxjzenod.supabase.co",

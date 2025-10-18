@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
+import PublicLayout from "../layouts/PublicLayout";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 import Home from "../pages/Home";
@@ -10,10 +11,16 @@ import Forgot from "../pages/Auth/Forgot";
 import Signup from "../pages/Auth/Signup";
 import Reset from "../pages/Auth/Reset";
 import Dashboard from "../pages/Dashboard/Dashboard";
+
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public routes with AuthLayout */}
+      {/* Public route for home page */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+
+      {/* Auth routes */}
       <Route element={<AuthLayout />}>
         {<Route path="/login" element={<Login />} />}
         <Route path="/register" element={<Signup />} />
@@ -23,7 +30,6 @@ function AppRoutes() {
 
       {/* Private routes with MainLayout */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
         <Route
           path="/dashboard"
           element={

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RiLoginBoxLine, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { supabase } from "../../Service/supabase/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { checkAuthRedirectToDashboard } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -12,6 +14,10 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    checkAuthRedirectToDashboard();
+  }, [checkAuthRedirectToDashboard]);
 
   const handleChange = (e) => {
     setFormData({

@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Line, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,6 +21,7 @@ import {
   RiAddLine,
 } from "react-icons/ri";
 import { useDatabases } from "../../hooks/useDatabases";
+import { useAuth } from "../../hooks/useAuth";
 import { StatsCard } from "./StatsCard";
 import { CreateProjectModal } from "./CreateProjectModal";
 import { ViewProjectModal } from "./ViewProjectModal";

@@ -20,13 +20,16 @@ export default async function handler(req) {
     }
 
     try {
-        // Get databases that need pinging
-        const { data: databases, error: dbError } = await supabase
+        // Get active databases that need pinging
+        const { data: databases, error: fetchError } = await supabase
             .from('databases')
             .select('*')
+            .eq('is_active', true)
             .lte('next_ping_at', new Date().toISOString());
 
-        if (dbError) throw dbError;
+        if (fetchError) {
+            throw new Error(`Failed to fetch databases: ${fetchError.message}`);
+        }
 
         const results = [];
 
@@ -46,55 +49,38 @@ export default async function handler(req) {
                 });
 
                 if (authError) {
-                    throw new Error(`Auth check failed: ${authError.message}`);
+                    results.push({
+                        project: db.project_name,
+                        status: 'failed',
+                        error: `Auth check failed: ${authError.message}`
+                    });
+                    continue;
                 }
 
-                // Check specified table if provided
-                if (db.query_table) {
-                    const { error: tableError } = await projectClient
-                        .from(db.query_table)
-                        .select('count')
-                        .limit(1)
-                        .single();
+                // Calculate next ping based on interval
+                const now = new Date();
+                const nextPing = new Date();
+                nextPing.setDate(now.getDate() + (db.ping_interval_days || 7));
 
-                    if (tableError && !tableError.message.includes('does not exist')) {
-                        throw new Error(`Table check failed: ${tableError.message}`);
-                    }
-                }
-
-                // Calculate next ping date
-                const nextPingDate = new Date();
-                nextPingDate.setDate(nextPingDate.getDate() + db.ping_interval_days);
-
-                // Update ping status
+                // Update ping times
                 const { error: updateError } = await supabase
                     .from('databases')
                     .update({
-                        last_ping_at: new Date().toISOString(),
-                        next_ping_at: nextPingDate.toISOString(),
-                        last_ping_status: 'success',
-                        last_error: null
+                        last_ping_at: now.toISOString(),
+                        next_ping_at: nextPing.toISOString(),
                     })
                     .eq('id', db.id);
 
-                if (updateError) throw updateError;
+                if (updateError) {
+                    throw updateError;
+                }
 
                 results.push({
                     project: db.project_name,
-                    status: 'success',
-                    next_ping: nextPingDate
+                    status: 'success'
                 });
 
             } catch (error) {
-                // Update error status
-                await supabase
-                    .from('databases')
-                    .update({
-                        last_ping_status: 'failed',
-                        last_error: error.message
-                    })
-                    .eq('id', db.id);
-
                 results.push({
                     project: db.project_name,
                     status: 'failed',
@@ -103,22 +89,28 @@ export default async function handler(req) {
             }
         }
 
-        return new Response(JSON.stringify({
-            success: true,
-            message: `Processed ${databases.length} databases`,
-            results
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+            JSON.stringify({
+                success: true,
+                message: `Processed ${databases.length} databases`,
+                results
+            }),
+            {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
 
     } catch (error) {
-        return new Response(JSON.stringify({
-            success: false,
-            error: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+            JSON.stringify({
+                success: false,
+                error: error.message
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }

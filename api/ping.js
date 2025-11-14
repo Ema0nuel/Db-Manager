@@ -42,19 +42,39 @@ export default async function handler(req) {
                     db.service_role_key
                 );
 
-                // Check auth system
+                let pingData = null;
+
+                // Always check auth system first
                 const { error: authError } = await projectClient.auth.admin.listUsers({
                     page: 1,
                     perPage: 1
                 });
 
                 if (authError) {
-                    results.push({
-                        project: db.project_name,
-                        status: 'failed',
-                        error: `Auth check failed: ${authError.message}`
-                    });
-                    continue;
+                    throw new Error(`Auth check failed: ${authError.message}`);
+                }
+
+                pingData = {
+                    type: 'auth',
+                    status: 'success'
+                };
+
+                // Additionally, query the specified table if provided
+                if (db.query_table) {
+                    const { data, error: queryError } = await projectClient
+                        .from(db.query_table)
+                        .select('*')
+                        .limit(1);
+
+                    if (queryError) {
+                        throw new Error(`Table query failed: ${queryError.message}`);
+                    }
+
+                    pingData = {
+                        ...pingData,
+                        table: db.query_table,
+                        rowCount: data?.length || 0
+                    };
                 }
 
                 // Calculate next ping based on interval
@@ -77,7 +97,8 @@ export default async function handler(req) {
 
                 results.push({
                     project: db.project_name,
-                    status: 'success'
+                    status: 'success',
+                    pingData
                 });
 
             } catch (error) {
